@@ -1,12 +1,12 @@
-import {auth} from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import {redirect} from "next/navigation";
 
-const LandingLayout = ({
+const LandingLayout = async ({
     children
 }: {
     children: React.ReactNode
 }) => {
-    const {userId} = auth()
+    const {userId} = await auth()
 
     if (userId) redirect("/dashboard")
 

@@ -1,16 +1,15 @@
 import {NextResponse} from "next/server";
-import { auth } from "@clerk/nextjs";
-import Replicate from "replicate"
+import { auth } from "@clerk/nextjs/server";
 
-const replicate = new Replicate({
-    auth: process.env.REPLICATEAI_API_KEY || ""
-})
+import { InferenceClient } from "@huggingface/inference";
+
+const client = new InferenceClient(process.env.HUGGINGFACE_API_KEY);
 
 export async function POST(
     req: Request
 ) {
     try {
-        const {userId} = auth()
+        const {userId} = await auth()
         const body = await req.json()
         const {prompt} = body
 
@@ -22,14 +21,12 @@ export async function POST(
             return new NextResponse("Prompt are required", { status: 400 })
         }
 
-        const response = await replicate.run(
-            "anotherjesse/zeroscope-v2-xl:9f747673945c62801b13b84701c783929c0ee784e4748ec062204894dda1a351",
-            {
-                input: {
-                   prompt
-                }
-            }
-        );
+        const response = await client.textToImage({
+            provider: "nscale",
+            model: "stabilityai/stable-diffusion-xl-base-1.0",
+            inputs: "Astronaut riding a horse",
+            parameters: { num_inference_steps: 5 },
+        });
 
         return NextResponse.json(response)
 

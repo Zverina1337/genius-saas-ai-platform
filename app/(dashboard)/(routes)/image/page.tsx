@@ -54,10 +54,9 @@ const ImagePage = () => {
         try {
             setImages([])
 
-            const response = await requestManager("/api/image", "POST",values)
+            const response = await requestManager("/api/image", "POST", values)
 
-            const urls = response.map((image: { url: string }) => image.url)
-
+            const urls = response.map((image: { url: string })=> image.url)
             setImages(urls)
             form.reset()
         } catch (error) {
@@ -250,6 +249,7 @@ const ImagePage = () => {
                                         overflow-hidden
                                     "
                                 >
+                                    {src}
                                     <div className="
                                             relative
                                             aspect-square
@@ -259,6 +259,7 @@ const ImagePage = () => {
                                             alt="Image"
                                             fill
                                             src={src}
+                                            unoptimized
                                         />
                                     </div>
                                     <CardFooter className="

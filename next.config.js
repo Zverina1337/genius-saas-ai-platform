@@ -2,7 +2,8 @@
 const nextConfig = {
     images: {
         domains: [
-            "oaidalleapiprodscus.blob.core.windows.net"
+            "i.imgur.com",
+            "www.midjourney.com"
         ]
     }
 }

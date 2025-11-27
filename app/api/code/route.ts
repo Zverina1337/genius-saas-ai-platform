@@ -1,13 +1,8 @@
 import Configuration, {OpenAI} from "openai"
 import {NextResponse} from "next/server";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import {ChatCompletionMessage} from "openai/resources/chat/index.mjs";
-
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY
-})
-
-const openai = new OpenAI({...configuration})
+import { openrouter } from "@/hooks/useOpenRouter";
 
 const instructionMessage: ChatCompletionMessage = {
     role: "system",
@@ -20,7 +15,7 @@ export async function POST(
     req: Request
 ) {
     try {
-        const {userId} = auth()
+        const {userId} = await auth()
         const body = await req.json()
         const {messages} = body
 
@@ -28,16 +23,12 @@ export async function POST(
             return new NextResponse("Unauthorized", { status: 401 })
         }
 
-        if (!configuration.apiKey) {
-            return new NextResponse("OpenAI Api key not configured", { status: 500 })
-        }
-
         if (!messages) {
             return new NextResponse("Messages are required", { status: 400 })
         }
 
-        const response = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
+        const response = await openrouter.chat.send({
+            model: "x-ai/grok-4.1-fast:free",
             messages: [instructionMessage, ...messages]
         })
 
