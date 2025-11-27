@@ -10,7 +10,7 @@ const UserAvatar = () => {
                 w-8
             "
         >
-            <AvatarImage src={user?.profileImageUrl}/>
+            <AvatarImage src={user?.imageUrl}/>
             <AvatarFallback>
                 {user?.firstName?.charAt(0)}
                 {user?.lastName?.charAt(0)}
